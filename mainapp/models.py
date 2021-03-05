@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from ckeditor_uploader.fields import RichTextUploadingField
 
 User = get_user_model()
 
@@ -8,9 +8,10 @@ User = get_user_model()
 class CompanyInformation(models.Model):
     name_company = models.CharField(verbose_name="Название компании", max_length=255)
     contact_person = models.CharField(verbose_name="Контактное лицо", max_length=255)
+    # about_company = RichTextUploadingField(verbose_name="Краткое описание")
     about_company = models.TextField(verbose_name="Краткое описание")
-    create_date = models.DateField(verbose_name="Дата создания", auto_now=True)
-    date_of_change = models.DateField(verbose_name="Дата изменения", auto_now_add=True)
+    create_date = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
+    date_of_change = models.DateTimeField(verbose_name="Дата последнего изменения", auto_now=True)
     address = models.CharField(verbose_name="Адрес", max_length=255)
     phone = models.CharField(verbose_name="Номер телефона", max_length=255)
     email = models.EmailField(verbose_name="E-mail")

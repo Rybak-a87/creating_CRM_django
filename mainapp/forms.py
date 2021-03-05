@@ -1,9 +1,11 @@
 from django import forms
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 from .models import CompanyInformation, ProjectForCompany
 
 
 class CreateCompanyForm(forms.ModelForm):
+
     class Meta:
         model = CompanyInformation
         fields = "__all__"
@@ -17,11 +19,7 @@ class CreateCompanyForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Контактное лицо"
             }),
-            "about_company": forms.Textarea(attrs={
-                "class": "form-control",
-                "placeholder": "Краткое описание",
-                "minlength": "20"
-            }),
+            "about_company": CKEditorUploadingWidget(),
             "address": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Адрес"
@@ -51,11 +49,7 @@ class CreateProjectForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Название проекта"
             }),
-            "about_project": forms.Textarea(attrs={
-                "class": "form-control",
-                "placeholder": "Краткое описание",
-                "minlength": "20"
-            }),
+            "about_project": CKEditorUploadingWidget(),
             "start_date": forms.SelectDateWidget(attrs={}),
             "finish_date": forms.SelectDateWidget(attrs={}),
             "price": forms.TextInput(attrs={

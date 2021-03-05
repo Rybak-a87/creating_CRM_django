@@ -10,18 +10,16 @@
             <div class="features">
                 <form action="" method="post">
                     {% csrf_token %}
-                    {{ form.name_project }}
-                    <br>
-                    {{ form.company }}
-                    <br>
-                    {{ form.about_project }}
-                    <br>
+                    <p>{{ form.name_project }}</p>
+                    <p>{{ form.company }}</p>
+                    <p>{{ form.price }}</p>
                     <p>Срок начала {{ form.start_date }}</p>
-                    <br>
                     <p>Срок окончания {{ form.finish_date }}</p>
                     <br>
-                    {{ form.price }}
-                    <br>
+                    <p>Описание:
+                        {{ form.media }}
+                        {{ form.about_project }}
+                    </p>
                     <input type="submit" class="btn btn-success" value="Применить">
                 </form>
             </div>

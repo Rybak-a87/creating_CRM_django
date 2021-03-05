@@ -15,19 +15,10 @@ class MainListView(ListView):
     template_name = "mainapp/main_page.html"
     context_object_name = "companies"
     paginate_by = 3
-    ordering = "-email"
 
-
-    # def get_queryset(self):
-    #     queryset = self.model.objects.all()
-    #     return queryset
-
-    # def get_ordering(self):
-    #     ordering = self.GET.get("ordering")
-    #     print(ordering)
-    #     return ordering
-
-
+    def get_ordering(self):
+        ordering = self.request.GET.get("order_by", "name_company")
+        return ordering
 
 
 class DetailCompanyView(View):
@@ -37,8 +28,10 @@ class DetailCompanyView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.get("pk")
         company = CompanyInformation.objects.get(id=id)
+        projects = ProjectForCompany.objects.filter(company__name_company=company.name_company)
         context = {
             "company": company,
+            "projects": projects
         }
         return render(request, "mainapp/company_detail.html", context)
 
@@ -88,7 +81,7 @@ class ProjectsListView(ListView):
     """
     Страница вывода проектов
     """
-    template_name = "mainapp/projects.html"
+    template_name = "mainapp/projects_in_work.html"
     context_object_name = "projects"
     paginate_by = 3
 
