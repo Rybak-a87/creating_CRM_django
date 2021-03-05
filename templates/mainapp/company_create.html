@@ -1,0 +1,30 @@
+{% extends "mainapp/main_page.html" %}
+
+{% block title %}Добавление / изменение компании{% endblock title %}
+
+{% block content %}
+    <div class="row text-center pt-3">
+        <div class="col-lg-6 m-auto">
+            <h3 class="h3">Добавление / изменение компании</h3>
+            <br>
+            <div class="features">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.name_company }}
+                    <br>
+                    {{ form.contact_person }}
+                    <br>
+                    {{ form.about_company }}
+                    <br>
+                    {{ form.address }}
+                    <br>
+                    {{ form.phone }}
+                    <br>
+                    {{ form.email }}
+                    <br>
+                    <input type="submit" class="btn btn-success" value="Применить">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

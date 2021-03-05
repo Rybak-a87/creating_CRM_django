@@ -1,0 +1,21 @@
+{% extends "mainapp/main_page.html" %}
+
+{% block title %}{{ company.name_company }}{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'mainapp:update_company' company.id %}"> <button class="btn btn-primary">Редактировать данные</button> </a>
+    <a href="{% url 'mainapp:delete_company' company.id %}"> <button class="btn btn-danger">Удалить клиента</button> </a>
+    <div class="row text-center pt-3">
+        <div class="col-lg-6 m-auto">
+            <h2 class="h2">{{ company.name_company }}</h2>
+            <p><strong>Контактное лицо:</strong><br>{{ company.contact_person }}</p>
+            <p><strong>Краткое описание:</strong><br>{{ company.about_company }}</p>
+            <p><strong>Дата создания:</strong><br>{{ company.create_date }}</p>
+            <p><strong>Дата изменения:</strong><br>{{ company.date_of_change }}</p>
+            <p><strong>Адрес:</strong><br>{{ company.address }}</p>
+            <p><strong>Номер телефона:</strong><br>{{ company.phone }}</p>
+            <p><strong>E-mail:</strong><br>{{ company.email }}</p>
+            <hr>
+        </div>
+    </div>
+{% endblock content %}

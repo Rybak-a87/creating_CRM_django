@@ -1,0 +1,19 @@
+{% extends "mainapp/main_page.html" %}
+
+{% block title %}Проект {{ project.name_project }}{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'mainapp:update_project' project.id %}"> <button class="btn btn-primary">Редактировать данные</button> </a>
+    <a href="{% url 'mainapp:delete_project' project.id %}"> <button class="btn btn-danger">Удалить проект</button> </a>
+    <div class="row text-center pt-3">
+        <div class="col-lg-6 m-auto">
+            <h2 class="h2">{{ project.name_project }}</h2>
+            <p><strong>Компания:</strong><br>{{ project.company }}</p>
+            <p><strong>Описание:</strong><br>{{ project.about_project }}</p>
+            <p><strong>Срок начала:</strong><br>{{ project.start_date }}</p>
+            <p><strong>Срок окончания:</strong><br>{{ project.finish_date }}</p>
+            <p><strong>Стоимость:</strong><br>{{ project.price }} $</p>
+            <hr>
+        </div>
+    </div>
+{% endblock content %}

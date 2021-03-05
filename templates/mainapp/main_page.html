@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+
+{% block title %}Наши клиенты{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'mainapp:create_company' %}"> <button class="btn btn-danger">Добавить клиента</button> </a>
+
+{#<div class="btn-group" role="group" aria-label="Basic example">#}
+{#<button type="button" class="btn btn-primary">Left</button>#}
+{#<button type="submit" class="btn btn-primary" value="-email" name="ordering">Middle</button>#}
+{#<button type="button" class="btn btn-primary">Right</button>#}
+{#</div>#}
+
+{#<form method="get" action="">#}
+{#<p>Filter: <input type="text" value="filter" name="filter"/></p>#}
+{#<p>order_by: <input type="text" value="orderby" name="orderby"/></p>#}
+{#<p><input type="submit" name="submit" value="submit"/></p>#}
+{#</form>#}
+
+    {% for company in companies %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <a href="{% url 'mainapp:detail_company' pk=company.id %}">
+                    <h3 class="h3">{{ company.name_company }}</h3>
+                </a>
+                <p><strong><i>Адрес:</i></strong> {{ company.address }}</p>
+                <p><strong><i>E-mail:</i></strong> {{ company.email }}</p>
+                <hr>
+            </div>
+        </div>
+    {% endfor %}
+    {% include "include/pagination.html" %}
+{% endblock content %}
