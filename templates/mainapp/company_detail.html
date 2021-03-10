@@ -9,7 +9,7 @@
         <div class="col-lg-6 m-auto">
             <h2 class="h2">{{ company.name_company }}</h2>
             <p><strong>Контактное лицо:</strong><br>{{ company.contact_person }}</p>
-            <p><strong>Краткое описание:</strong><br>{{ company.about_company }}</p>
+            <p><strong>Краткое описание:</strong><br>{{ company.about_company|striptags }}</p>
             <p><strong>Дата создания:</strong><br>{{ company.create_date }}</p>
             <p><strong>Дата последнего изменения:</strong><br>{{ company.date_of_change }}</p>
             <p><strong>Адрес:</strong><br>{{ company.address }}</p>
@@ -20,7 +20,7 @@
         <h4 class="h4" style="color: green">Выполненные проекты компании</h4>
         <a href="{% url 'mainapp:create_project' %}"> <button class="btn btn-primary">Добавить проект</button> </a>
         {% for project in projects %}
-            {% if project.finish_date %}
+            {% if project.finished %}
                 <div class="row text-center pt-3">
                     <div class="col-lg-6 m-auto">
                         <a href="{% url 'mainapp:detail_project' pk=project.id %}">

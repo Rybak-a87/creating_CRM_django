@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from ckeditor_uploader.fields import RichTextUploadingField
+# from ckeditor_uploader.fields import RichTextUploadingField
 
 User = get_user_model()
 
@@ -32,6 +32,7 @@ class ProjectForCompany(models.Model):
     name_project = models.CharField(verbose_name="Название проекта", max_length=255)
     about_project = models.TextField(verbose_name="Описание")
     start_date = models.DateField(verbose_name="Срок начала")
+    finished = models.BooleanField(verbose_name="Законченный проект", default=False)
     finish_date = models.DateField(verbose_name="Срок окончания", null=True, blank=True)
     price = models.FloatField(verbose_name="Стоимость")
 
@@ -47,12 +48,17 @@ class ProjectForCompany(models.Model):
 
 
 class Interaction(models.Model):
+    APPLICATION = ("Заявка", "Заявка")
+    MAIL = ("Письмо", "Письмо")
+    SITE = ("Сайт", "Сайт")
+    INITIATIVE = ("Инициатива компании", "Инициатива компании")
     CHANNEL_CHOICES = (
-        ("application", "Заявка"),
-        ("mail", "Письмо"),
-        ("site", "Сайт"),
-        ("initiative", "Инициатива компании")
+        APPLICATION,
+        MAIL,
+        SITE,
+        INITIATIVE
     )
+
     project = models.ForeignKey(ProjectForCompany, verbose_name="Проект", on_delete=models.CASCADE)
     company = models.ForeignKey(CompanyInformation, verbose_name="Компания", on_delete=models.CASCADE)
     communication_channel = models.CharField(
@@ -61,28 +67,31 @@ class Interaction(models.Model):
         choices=CHANNEL_CHOICES
     )
     manager = models.ForeignKey(User, verbose_name="Менеджер", on_delete=models.CASCADE)
+    date_create = models.DateTimeField(verbose_name="Дата создания взаимодействия", auto_now_add=True)
     about = models.TextField(verbose_name="Описание")
-    rating = models.IntegerField(verbose_name="Оценка", default=0)
+    like = models.PositiveIntegerField(verbose_name="Лайк", default=0)
+    dislike = models.PositiveIntegerField(verbose_name="Дизлайк", default=0)
 
     def __str__(self):
-        return f"{self.project} ] {self.manager}"
+        return f"{self.project} | {self.manager}"
+
+    def get_absolute_url(self):
+        return f"/interaction/{self.id}"
 
     class Meta:
         verbose_name = "Взаимодействие"
         verbose_name_plural = "Взаимодействия"
 
 
-class SiteUser(models.Model):
-    photo = models.ImageField(verbose_name="Фото", upload_to="user_photo/", null=True, blank=True)
-    first_name = models.CharField(verbose_name="Имя", max_length=255)
-    last_name = models.CharField(verbose_name="Фамилия", max_length=255)
-    email = models.EmailField(verbose_name="Электронная почта")
-    password = models.CharField(verbose_name="Пароль", max_length=255)
+class RatingInteraction(models.Model):
+    interaction = models.ForeignKey(Interaction, verbose_name="Взаимодействие", on_delete=models.CASCADE)
+    manager = models.ForeignKey(User, verbose_name="Менеджер", on_delete=models.CASCADE)
+    like = models.BooleanField(verbose_name="Лайк", default=False)
+    dislike = models.BooleanField(verbose_name="Дизлайк", default=False)
 
     def __str__(self):
-        return f"{self.last_name} {self.first_name}"
+        return f"{self.interaction.date_create} | {self.interaction.manager} | {'+' if self.like else '-'}"
 
     class Meta:
-        verbose_name = "Пользователь сайта"
-        verbose_name_plural = "Пользователи сайта"
-
+        verbose_name = "Оценка"
+        verbose_name_plural = "Оценки"

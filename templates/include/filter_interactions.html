@@ -1,0 +1,24 @@
+ <form method="get" action="">
+    <p>Выбрать компанию
+    <select name="company" id="">
+        <option value="">---</option>
+        {% for interaction in interactions %}
+            <option value="{{ interaction.company }}">{{ interaction.company }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" name="submit" value="Применить"/>
+    </p>
+</form>
+
+<form method="get" action="">
+    <p>Выбрать проект
+        <select name="project" id="">
+            <option value="">---</option>
+            {% for interaction in interactions %}
+                <option value="{{ interaction.project }}">{{ interaction.project }}</option>
+            {% endfor %}
+        </select>
+    <input type="submit" name="submit" value="Применить"/>
+    </p>
+</form>
+<form method="get" action=""><input class="btn-danger" type="submit" name="submit" value="Сброс"/></form>

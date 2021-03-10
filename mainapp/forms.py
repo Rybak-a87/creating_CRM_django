@@ -1,7 +1,7 @@
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from .models import CompanyInformation, ProjectForCompany
+from .models import CompanyInformation, ProjectForCompany, Interaction
 
 
 class CreateCompanyForm(forms.ModelForm):
@@ -56,4 +56,26 @@ class CreateProjectForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Стоимость"
             })
+        }
+
+
+class CreateInteractionForm(forms.ModelForm):
+    class Meta:
+        model = Interaction
+        fields = ("manager", "communication_channel", "about")
+
+        widgets = {
+            "manager": forms.Select(attrs={
+                "class": "form-control",
+                "placeholder": "Название проекта"
+            }),
+            "about": forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": "Описание"
+            }),
+            "communication_channel": forms.Select(attrs={
+                "class": "form-control",
+                "placeholder": "Канал общения"
+            })
+
         }

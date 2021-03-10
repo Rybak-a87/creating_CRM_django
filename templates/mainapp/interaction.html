@@ -1,0 +1,28 @@
+{% extends "base/base.html" %}
+
+{% block title %}Все взаимодействия{% endblock title %}
+
+{% block content %}
+
+    {% include "include/search.html" %}
+    <br>
+    
+    {% include "include/filter_interactions.html" %}
+
+    {% for interaction in interactions %}
+    <div class="row text-center pt-3">
+        <div class="col-lg-6 m-auto">
+            <p>
+                <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">
+                    Проект: {{ interaction.project }} |
+                    Компания: {{ interaction.company }} |
+                    Канал общения: {{ interaction.communication_channel }} |
+                    Менеджер: {{ interaction.manager }} |
+                    Описание: {{ interaction.about }}
+                </a>
+            </p>
+            <hr>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock content %}

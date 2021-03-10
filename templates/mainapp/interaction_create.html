@@ -1,0 +1,24 @@
+{% extends "mainapp/interaction.html" %}
+
+{% block title %}Добавление взаимодействие{% endblock title %}
+
+{% block content %}
+    <div class="row text-center pt-3">
+        <div class="col-lg-6 m-auto">
+            <h3 class="h3">Добавление взаимодействие</h3>
+            <br>
+            <div class="features">
+                <h3 class="h3">Проект: {{ project.name_project }}</h3>
+                <h4 class="h4">Компания: {{ project.company }}</h4>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <p>Канал общения: {{ form.communication_channel }}</p>
+                    <p>Менеджер: {{ form.manager }}</p>
+                    <p>{{ form.about }}</p>
+
+                    <input type="submit" class="btn btn-success" value="Применить">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

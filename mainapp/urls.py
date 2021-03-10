@@ -18,4 +18,10 @@ urlpatterns = [
     path("project/create_new/", views.CreateProjectView.as_view(), name="create_project"),
     path("project/<int:pk>/update/", views.ProjectUpdateView.as_view(), name="update_project"),
     path("project/<int:pk>/delete/", views.ProjectDeleteView.as_view(), name="delete_project"),
+    # interaction
+    path("interactions/", views.InteractionListView.as_view(), name="interaction_page"),
+    path("interaction/<int:pk>/", views.DetailInteractionView.as_view(), name="interaction_detail"),
+    path("interaction/<int:pk>/create/", views.CreateInteractionView.as_view(), name="create_interaction"),
+    path("interaction/<int:pk>/update/", views.InteractionUpdateView.as_view(), name="update_interaction"),
+    path("interaction/<int:pk>/delete", views.InteractionDeleteView.as_view(), name="delete_interaction"),
 ]
