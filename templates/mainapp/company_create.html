@@ -3,26 +3,28 @@
 {% block title %}Добавление / изменение компании{% endblock title %}
 
 {% block content %}
-    <div class="row text-center pt-3">
-        <div class="col-lg-6 m-auto">
-            <h3 class="h3">Добавление / изменение компании</h3>
-            <br>
-            <div class="features">
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <p>{{ form.name_company }}</p>
-                    <p>{{ form.contact_person }}</p>
-                    <p>{{ form.address }}</p>
-                    <p>{{ form.phone }}</p>
-                    <p>{{ form.email }}</p>
-                    <br>
-                    <p>Описание
-                        {{ form.media }}
-                        {{ form.about_company }}
-                    </p>
-                    <input type="submit" class="btn btn-success" value="Применить">
-                </form>
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h3 class="h3">Добавление / изменение компании</h3>
+                <br>
+                <div class="features">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <p>{{ form.name_company }}</p>
+                        <p>{{ form.contact_person }}</p>
+                        <p>{{ form.address }}</p>
+                        <p>{{ form.phone }}</p>
+                        <p>{{ form.email }}</p>
+                        <br>
+                        <p>Описание
+                            {{ form.media }}
+                            {{ form.about_company }}
+                        </p>
+                        <input type="submit" class="btn btn-success" value="Применить">
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock content %}

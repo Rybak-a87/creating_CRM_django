@@ -1,0 +1,20 @@
+{% extends "base/base.html" %}
+
+{% block title %}Редактировать данные{% endblock title %}
+
+{% block content %}
+                {{ kwagrs }}
+    {% if request.user.id == check_user %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h3 class="h3">Пользователь {{ request.user.username }}</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <p><input type="submit" class="btn btn-primary" value="Применить" style="margin-top: 20px"></p>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock content %}

@@ -4,6 +4,8 @@
         <div class="align-self-center flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
             <div class="">
                 <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+{#                  account#}
+                    {% if request.user.is_authenticated and request.user.manager_status %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'mainapp:main_page' %}">Главная</a>
                     </li>
@@ -14,17 +16,36 @@
                         <a class="nav-link" href="{% url 'mainapp:interaction_page' %}">Взаимодействия</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Кабинет менеджера</a>
+                        <a class="nav-link" href="{% url 'mainapp:manager' %}">Кабинет менеджера</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-success" href="#">Войти</a>
+                        <span style="font-size:20px; color:orange; margin-left: 40px; margin-right: 20px;">
+                            Здравствуйте менеджер,
+                            <a href="{% url 'mainapp:manager' %}" style="text-decoration:none;">{{ request.user.username }}</a>
+                        </span>
+                        <a class="btn btn-success" href="{% url 'account:logout' %}">Выйти</a>
+                    </li>
+                    {% elif request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <span style="font-size:20px; color:orange; margin-left: 40px; margin-right: 20px;">
+                                Здравствуйте пользователь,
+                                <a href="#" style="text-decoration:none;">{{ request.user.username }}</a>
+                            </span>
+                            <a class="btn btn-success" href="{% url 'account:logout' %}">Выйти</a>
+                        </li>
+
+                    {% else %}
+                    <li class="nav-item">
+                        <snap style="font-size:20px; color:#ff0000; margin-left: 20px;">Вы вошли как гость, Ваши права ограничены. пройдите авторизацию.</snap>
+                    </li>
+                    <li class="nav-item" style="margin-left: 20px; margin-right: 10px;">
+                        <a class="btn btn-success" href="{% url 'account:login' %}">Войти</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-success" href="#">Регистрация</a>
+                        <a class="btn btn-primary" href="{% url 'account:registration' %}">Регистрация</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-danger" href="#">Выйти</a>
-                    </li>
+                    {% endif %}
+{#                account#}
                 </ul>
             </div>
         </div>

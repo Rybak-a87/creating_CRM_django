@@ -3,27 +3,29 @@
 {% block title %}Добавление / изменение проекта{% endblock title %}
 
 {% block content %}
-    <div class="row text-center pt-3">
-        <div class="col-lg-6 m-auto">
-            <h3 class="h3">Добавление / изменение проекта</h3>
-            <br>
-            <div class="features">
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <p>{{ form.name_project }}</p>
-                    <p>{{ form.company }}</p>
-                    <p>{{ form.price }}</p>
-                    <p>Срок начала {{ form.start_date }}</p>
-                    <p>Проект закончен {{ form.finished }}</p>
-                    <p>Срок окончания {{ form.finish_date }}</p>
-                    <br>
-                    <p>Описание:
-                        {{ form.media }}
-                        {{ form.about_project }}
-                    </p>
-                    <input type="submit" class="btn btn-success" value="Применить">
-                </form>
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h3 class="h3">Добавление / изменение проекта</h3>
+                <br>
+                <div class="features">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <p>{{ form.name_project }}</p>
+                        <p>{{ form.company }}</p>
+                        <p>{{ form.price }}</p>
+                        <p>Срок начала {{ form.start_date }}</p>
+                        <p>Проект закончен {{ form.finished }}</p>
+                        <p>Срок окончания {{ form.finish_date }}</p>
+                        <br>
+                        <p>Описание:
+                            {{ form.media }}
+                            {{ form.about_project }}
+                        </p>
+                        <input type="submit" class="btn btn-success" value="Применить">
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock content %}

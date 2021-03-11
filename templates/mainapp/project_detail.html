@@ -3,39 +3,44 @@
 {% block title %}Проект {{ project.name_project }}{% endblock title %}
 
 {% block content %}
-    <a href="{% url 'mainapp:update_project' project.id %}"> <button class="btn btn-primary">Редактировать данные</button> </a>
-    <a href="{% url 'mainapp:delete_project' project.id %}"> <button class="btn btn-danger">Удалить проект</button> </a>
-    <div class="row text-center pt-3">
-        <div class="col-lg-6 m-auto">
-            <h2 class="h2">{{ project.name_project }}</h2>
-            <p><strong>Компания:</strong><br>{{ project.company }}</p>
-            <p><strong>Описание:</strong><br>{{ project.about_project|striptags }}</p>
-            <p><strong>Срок начала:</strong><br>{{ project.start_date }}</p>
-            <p>
-                {% if project.finished %}
-                    <strong><i>Статус проекта:</i></strong> Законченный
-                    <p><strong>Срок окончания:</strong><br>{{ project.finish_date }}</p>
-                {% else %}
-                    <strong><i>Статус проекта:</i></strong> В работе
-                {% endif %}
-            </p>
-            <p><strong>Стоимость:</strong><br>{{ project.price }} $</p>
-            <hr>
-        </div>
-        <h4 class="h4" style="color: green">Взаимодействие по проекту</h4>
-        <a href="{% url 'mainapp:create_interaction' pk=project.id %}"> <button class="btn btn-primary">Добавить взаимодействие</button> </a>
-        {% for interaction in interactions %}
-            <div class="row text-center pt-3">
-                <div class="col-lg-6 m-auto">
-                    <p>
-                        <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">{{ interaction.date_create }}</a> |
-                        {{ interaction.manager }} |
-                        <strong>{{ interaction.about }}</strong>
-                    </p>
-                    <hr>
-                </div>
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <a href="{% url 'mainapp:update_project' project.id %}"> <button class="btn btn-primary">Редактировать данные</button> </a>
+        <a href="{% url 'mainapp:delete_project' project.id %}"> <button class="btn btn-danger">Удалить проект</button> </a>
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h2 class="h2">{{ project.name_project }}</h2>
+                <p><strong>Компания:</strong><br>{{ project.company }}</p>
+                <p><strong>Описание:</strong><br>{{ project.about_project|striptags }}</p>
+                <p><strong>Срок начала:</strong><br>{{ project.start_date }}</p>
+                <p>
+                    {% if project.finished %}
+                        <strong><i>Статус проекта:</i></strong> Законченный
+                        <p><strong>Срок окончания:</strong><br>{{ project.finish_date }}</p>
+                    {% else %}
+                        <strong><i>Статус проекта:</i></strong> В работе
+                    {% endif %}
+                </p>
+                <p><strong>Стоимость:</strong><br>{{ project.price }} $</p>
+                <hr>
             </div>
-        {% endfor %}
-    </div>
-
+            <h4 class="h4" style="color: green">Взаимодействие по проекту</h4>
+            <a href="{% url 'mainapp:create_interaction' pk=project.id %}"> <button class="btn btn-primary">Добавить взаимодействие</button> </a>
+            {% for interaction in interactions %}
+                <div class="row text-center pt-3">
+                    <div class="col-lg-6 m-auto">
+                        <p>
+                            {% if request.user.username == interaction.manager.username %}
+                                <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">{{ interaction.date_create }}</a>
+                            {% else %}
+                                {{ interaction.date_create }}
+                            {% endif %}
+                            | {{ interaction.manager }} |
+                            <strong>{{ interaction.about }}</strong>
+                        </p>
+                        <hr>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock content %}

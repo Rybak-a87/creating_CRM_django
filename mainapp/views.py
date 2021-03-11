@@ -238,3 +238,14 @@ class InteractionDeleteView(DeleteView):
     model = Interaction
     template_name = "mainapp/company_delete.html"
     success_url = "/interactions/"
+
+
+class ManagerView(View):
+    def get(self, request, *args, **kwargs):
+        username = request.user.username
+        print(username)
+        interactions = Interaction.objects.filter(manager__username=username)
+        context = {
+            "interactions": interactions
+        }
+        return render(request, "mainapp/manager.html", context)

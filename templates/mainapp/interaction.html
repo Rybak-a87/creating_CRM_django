@@ -3,26 +3,35 @@
 {% block title %}Все взаимодействия{% endblock title %}
 
 {% block content %}
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        {% include "include/search.html" %}
+        <br>
 
-    {% include "include/search.html" %}
-    <br>
-    
-    {% include "include/filter_interactions.html" %}
+        {% include "include/filter_interactions.html" %}
 
-    {% for interaction in interactions %}
-    <div class="row text-center pt-3">
-        <div class="col-lg-6 m-auto">
-            <p>
-                <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">
-                    Проект: {{ interaction.project }} |
-                    Компания: {{ interaction.company }} |
-                    Канал общения: {{ interaction.communication_channel }} |
-                    Менеджер: {{ interaction.manager }} |
-                    Описание: {{ interaction.about }}
-                </a>
-            </p>
-            <hr>
+        {% for interaction in interactions %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <p>
+                    {% if request.user.username == interaction.manager.username %}
+                        <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">
+                            Проект: {{ interaction.project }} |
+                            Компания: {{ interaction.company }} |
+                            Канал общения: {{ interaction.communication_channel }} |
+                            Менеджер: {{ interaction.manager }} |
+                            Описание: {{ interaction.about }}
+                        </a>
+                    {% else %}
+                        Проект: {{ interaction.project }} |
+                        Компания: {{ interaction.company }} |
+                        Канал общения: {{ interaction.communication_channel }} |
+                        Менеджер: {{ interaction.manager }} |
+                        Описание: {{ interaction.about }}
+                    {% endif %}
+                </p>
+                <hr>
+            </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 {% endblock content %}

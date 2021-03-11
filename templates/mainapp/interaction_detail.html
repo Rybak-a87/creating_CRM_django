@@ -3,20 +3,26 @@
 {% block title %}{{ interaction.project }} - {{ interaction.manager }}{% endblock title %}
 
 {% block content %}
-    <a href="{% url 'mainapp:update_interaction' pk=interaction.id %}"> <button class="btn btn-primary">Редактировать</button></a>
-    <a href="{% url 'mainapp:delete_interaction' pk=interaction.id %}"> <button class="btn btn-danger">Удалить</button></a>
-    <div class="row text-center pt-3">
-        <div class="col-lg-6 m-auto">
-            <a href="{% url 'mainapp:detail_project' pk=interaction.project.id %}"><p>Проект: {{ interaction.project }}</p></a>
-            <a href="{% url 'mainapp:detail_company' pk=interaction.company.id %}"><p>Компания: {{ interaction.company }}</p></a>
-            <p>Канал общения: {{ interaction.communication_channel }}</p>
-            <p>Менеджер: {{ interaction.manager }}</p>
-            <p>{{ interaction.date_create }}</p>
-            <p><i>Описание: <strong>{{ interaction.about }}</strong></i></p>
-            <p>
-                {% include "include/like_dislike_interaction.html" %}
-            </p>
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <a href="{% url 'mainapp:update_interaction' pk=interaction.id %}"> <button class="btn btn-primary">Редактировать</button></a>
+        <a href="{% url 'mainapp:delete_interaction' pk=interaction.id %}"> <button class="btn btn-danger">Удалить</button></a>
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                {% if request.user.username == interaction.manager %}
+                    <a href="{% url 'mainapp:detail_project' pk=interaction.project.id %}"><p>Проект: {{ interaction.project }}</p></a>
+                    <a href="{% url 'mainapp:detail_company' pk=interaction.company.id %}"><p>Компания: {{ interaction.company }}</p></a>
+                {% else %}
+                    <p>Проект: {{ interaction.project }}</p>
+                    <p>Компания: {{ interaction.company }}</p>
+                {% endif %}
+                <p>Канал общения: {{ interaction.communication_channel }}</p>
+                <p>Менеджер: {{ interaction.manager }}</p>
+                <p>{{ interaction.date_create }}</p>
+                <p><i>Описание: <strong>{{ interaction.about }}</strong></i></p>
+                <p>
+                    {% include "include/like_dislike_interaction.html" %}
+                </p>
+            </div>
         </div>
-    </div>
-
+    {% endif %}
 {% endblock content %}

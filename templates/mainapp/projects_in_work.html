@@ -3,29 +3,31 @@
 {% block title %}Проекты{% endblock title %}
 
 {% block content %}
-    <a href="{% url 'mainapp:create_project' %}"> <button class="btn btn-primary">Добавить проект</button> </a>
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <a href="{% url 'mainapp:create_project' %}"> <button class="btn btn-primary">Добавить проект</button> </a>
 
-    {% include "include/filter_projects.html" %}
+        {% include "include/filter_projects.html" %}
 
-    {% for project in projects %}
-        <div class="row text-center pt-3">
-            <div class="col-lg-6 m-auto">
-                <a href="{% url 'mainapp:detail_project' pk=project.id %}">
-                    <h3 class="h3">{{ project.name_project }}</h3>
-                </a>
-                <p><strong><i>Компания:</i></strong> {{ project.company }}</p>
-                <p>
-                    {% if project.finished %}
-                        <strong><i>Статус проекта:</i></strong> Законченный
-                    {% else %}
-                        <strong><i>Статус проекта:</i></strong> В работе
-                    {% endif %}
-                </p>
-                <p><strong><i>Стоимость:</i></strong> {{ project.price }} $</p>
-                <hr>
+        {% for project in projects %}
+            <div class="row text-center pt-3">
+                <div class="col-lg-6 m-auto">
+                    <a href="{% url 'mainapp:detail_project' pk=project.id %}">
+                        <h3 class="h3">{{ project.name_project }}</h3>
+                    </a>
+                    <p><strong><i>Компания:</i></strong> {{ project.company }}</p>
+                    <p>
+                        {% if project.finished %}
+                            <strong><i>Статус проекта:</i></strong> Законченный
+                        {% else %}
+                            <strong><i>Статус проекта:</i></strong> В работе
+                        {% endif %}
+                    </p>
+                    <p><strong><i>Стоимость:</i></strong> {{ project.price }} $</p>
+                    <hr>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
 
 {#    {% include "include/pagination.html" %}#}
+    {% endif %}
 {% endblock content %}

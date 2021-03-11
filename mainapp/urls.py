@@ -24,4 +24,6 @@ urlpatterns = [
     path("interaction/<int:pk>/create/", views.CreateInteractionView.as_view(), name="create_interaction"),
     path("interaction/<int:pk>/update/", views.InteractionUpdateView.as_view(), name="update_interaction"),
     path("interaction/<int:pk>/delete", views.InteractionDeleteView.as_view(), name="delete_interaction"),
+    # manager
+    path("user/", views.ManagerView.as_view(), name="manager"),
 ]

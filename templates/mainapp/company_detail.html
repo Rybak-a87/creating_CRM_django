@@ -3,8 +3,10 @@
 {% block title %}{{ company.name_company }}{% endblock title %}
 
 {% block content %}
-    <a href="{% url 'mainapp:update_company' company.id %}"> <button class="btn btn-primary">Редактировать данные компании</button> </a>
-    <a href="{% url 'mainapp:delete_company' company.id %}"> <button class="btn btn-danger">Удалить клиента</button> </a>
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <a href="{% url 'mainapp:update_company' company.id %}"> <button class="btn btn-primary">Редактировать данные компании</button> </a>
+        <a href="{% url 'mainapp:delete_company' company.id %}"> <button class="btn btn-danger">Удалить клиента</button> </a>
+    {% endif %}
     <div class="row text-center pt-3">
         <div class="col-lg-6 m-auto">
             <h2 class="h2">{{ company.name_company }}</h2>
@@ -18,14 +20,20 @@
             <hr>
         </div>
         <h4 class="h4" style="color: green">Выполненные проекты компании</h4>
-        <a href="{% url 'mainapp:create_project' %}"> <button class="btn btn-primary">Добавить проект</button> </a>
+        {% if request.user.is_authenticated and request.user.manager_status %}
+            <a href="{% url 'mainapp:create_project' %}"> <button class="btn btn-primary">Добавить проект</button> </a>
+        {% endif %}
         {% for project in projects %}
             {% if project.finished %}
                 <div class="row text-center pt-3">
                     <div class="col-lg-6 m-auto">
-                        <a href="{% url 'mainapp:detail_project' pk=project.id %}">
+                        {% if request.user.is_authenticated and request.user.manager_status %}
+                            <a href="{% url 'mainapp:detail_project' pk=project.id %}">
+                                <h5 class="h5">{{ project.name_project }}</h5>
+                            </a>
+                        {% elif request.user.is_authenticated %}
                             <h5 class="h5">{{ project.name_project }}</h5>
-                        </a>
+                        {% endif %}
                         <p><strong><i>Стоимость:</i></strong> {{ project.price }} $</p>
                         <hr>
                     </div>

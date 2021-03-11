@@ -1,9 +1,44 @@
 {% extends "base/base.html" %}
-
-{% block title %}Менеджер {% endblock title %}
+{% load static %}
+{% block title %}{{ request.user.username }}{% endblock title %}
 
 {% block content %}
-
-    <h2 class="text-center">Кабинет менеджера </h2>
-
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h2 class="text-center">
+                    {% if request.user.manager_status %}
+                        Кабинет менеджера
+                    {% else %}
+                        Пользователь
+                    {% endif %}
+                    <strong><span style="color: red">{{ request.user.username }}</span></strong></h2>
+                {% if request.user.photo %}
+                    <img src="{{ request.user.photo.url }}" height="200" >
+                {% else %}
+                    <img src="{% static 'mainapp/img/ava.png' %}">
+                {% endif %}
+                <p class="text-center" style="margin-top: 15px;">Имя: {{ request.user.first_name }}</p>
+                <p class="text-center" style="margin-top: 15px;">Фамилия: {{ request.user.last_name }}</p>
+                <p class="text-center" style="margin-top: 15px;">Электронная почта: {{ request.user.email }}</p>
+                <p><a href="{% url 'account:update_user' pk=request.user.id %}" class="btn btn-primary">Редактировать данные</a></p>
+                <form method="get"><input type="hidden" name="check" value="{{ request.user.id }}"></form>
+                {% if request.user.manager_status %}
+                    <hr>
+                    <h4 class="h4">Мои взаимодействия:</h4>
+                        {% for interaction in interactions %}
+                            <p>
+                                <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">
+                                    Проект: {{ interaction.project }} |
+                                    Компания: {{ interaction.company }} |
+                                    Канал общения: {{ interaction.communication_channel }} |
+                                    Описание: {{ interaction.about }}
+                                </a>
+                            </p>
+                            <hr>
+                        {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}
