@@ -6,6 +6,9 @@ User = get_user_model()
 
 
 class CompanyInformation(models.Model):
+    """
+    Модель компании (клиента)
+    """
     name_company = models.CharField(verbose_name="Название компании", max_length=255)
     contact_person = models.CharField(verbose_name="Контактное лицо", max_length=255)
     # about_company = RichTextUploadingField(verbose_name="Краткое описание")
@@ -28,6 +31,9 @@ class CompanyInformation(models.Model):
 
 
 class ProjectForCompany(models.Model):
+    """
+    Модель проекта компании (клиента)
+    """
     company = models.ForeignKey(CompanyInformation, verbose_name="Компания", on_delete=models.CASCADE)
     name_project = models.CharField(verbose_name="Название проекта", max_length=255)
     about_project = models.TextField(verbose_name="Описание")
@@ -48,6 +54,9 @@ class ProjectForCompany(models.Model):
 
 
 class Interaction(models.Model):
+    """
+    Модель взаимодействия менеджера с клиентом по проекту
+    """
     APPLICATION = ("Заявка", "Заявка")
     MAIL = ("Письмо", "Письмо")
     SITE = ("Сайт", "Сайт")
@@ -83,7 +92,11 @@ class Interaction(models.Model):
         verbose_name_plural = "Взаимодействия"
 
 
+# TODO доделать систему рейтингов взаимодействий
 class RatingInteraction(models.Model):
+    """
+    Модель рейтинг взаимодействия менеджера с клиентом
+    """
     interaction = models.ForeignKey(Interaction, verbose_name="Взаимодействие", on_delete=models.CASCADE)
     manager = models.ForeignKey(User, verbose_name="Менеджер", on_delete=models.CASCADE)
     like = models.BooleanField(verbose_name="Лайк", default=False)

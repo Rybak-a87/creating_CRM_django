@@ -1,0 +1,5 @@
+https://coderoad.ru/33350362/Django-ListView-форма-для-фильтрации-и-сортировки
+
+https://overcoder.net/q/213536/есть-ли-в-django-list-view-модель-для-сортировки
+
+https://progi.pro/django-listview-forma-filtracii-i-sortirovki-1452332

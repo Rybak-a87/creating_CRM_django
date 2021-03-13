@@ -4,6 +4,9 @@ from .models import Account
 
 
 class LoginForm(forms.ModelForm):
+    """
+    Форма для авторизации пользователя
+    """
     username = forms.CharField(widget=forms.TextInput(attrs={
         "class": "form-control",
         "placeholder": "Логин",
@@ -21,6 +24,9 @@ class LoginForm(forms.ModelForm):
         self.fields["password"].label = ""
 
     def clean(self):
+        """
+        Проверка введенных username и password на соответствие для входа
+        """
         username = self.cleaned_data["username"]
         password = self.cleaned_data["password"]
         if not Account.objects.filter(username=username).exists():
@@ -37,6 +43,9 @@ class LoginForm(forms.ModelForm):
 
 
 class RegistrationForm(forms.ModelForm):
+    """
+    Форма регистрации пользователя
+    """
     username = forms.CharField(widget=forms.TextInput(attrs={
         "class": "form-control",
         "placeholder": "Логин",
@@ -67,10 +76,11 @@ class RegistrationForm(forms.ModelForm):
         "placeholder": "Электронная почта",
         "style": "margin-top: 20px; margin-bottom: 20px;"
     }))
-    manager_status = forms.BooleanField(widget=forms.CheckboxInput(attrs={
-        # "class": "btn-check",
-        "id": "manager",
-    }))
+    # TODO почему при активности, поле становится обязательным к заполнению (разобраться)
+    # manager_status = forms.BooleanField(widget=forms.CheckboxInput(attrs={
+    #     # "class": "btn-check",
+    #     "id": "manager",
+    # }))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -83,18 +93,27 @@ class RegistrationForm(forms.ModelForm):
         self.fields["manager_status"].label = "Менеджер"
 
     def clean_username(self):
+        """
+        Проверка введенного username на совпадение в БД
+        """
         username = self.cleaned_data["username"]
         if Account.objects.filter(username=username).exists():
             raise forms.ValidationError(f"Логин {username} уже зарегистрирован")
         return username
 
     def clean_email(self):
+        """
+        Проверка введенного email на совпадение в БД
+        """
         email = self.cleaned_data["email"]
         if Account.objects.filter(email=email).exists():
             raise forms.ValidationError(f"{email} уже зарегистрирован")
         return email
 
     def clean(self):
+        """
+        Проверка введенных паролей на совпадение
+        """
         password = self.cleaned_data["password"]
         confirm_password = self.cleaned_data["confirm_password"]
         if password != confirm_password:
@@ -115,6 +134,9 @@ class RegistrationForm(forms.ModelForm):
 
 
 class UpdateUserForm(forms.ModelForm):
+    """
+    Форма изменения имени, фамилии и почты пользователя
+    """
     first_name = forms.CharField(widget=forms.TextInput(attrs={
         "class": "form-control",
         "style": "margin-top: 20px;"
@@ -127,30 +149,51 @@ class UpdateUserForm(forms.ModelForm):
         "class": "form-control",
         "style": "margin-top: 20px; margin-bottom: 20px;"
     }))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-        "class": "form-control",
-        "placeholder": "Пароль",
-        "style": "margin-top: 30px;"
-    }))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
-        "class": "form-control",
-        "placeholder": "Подтвердите пароль",
-        "style": "margin-top: 20px;"
-    }))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["first_name"].label = "Имя"
         self.fields["last_name"].label = "Фамилия"
-        self.fields["password"].label = ""
-        self.fields["confirm_password"].label = ""
         self.fields["email"].label = "Электронная почта"
 
     def clean_email(self):
+        """
+        Проверка введенного email на совпадение в БД
+        """
         email = self.cleaned_data["email"]
-        if Account.objects.filter(email=email).exists():
+        # TODO доработать проверку email при его редактировании
+        if Account.objects.filter(email=email).count() > 1:
             raise forms.ValidationError(f"{email} уже зарегистрирован")
         return email
+
+    class Meta:
+        model = Account
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+        ]
+
+
+class UpdatePassForm(forms.ModelForm):
+    """
+    Форма обновление пароля
+    """
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "Новый пароль",
+        "style": "margin-top: 30px;"
+    }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "Подтвердите новый пароль",
+        "style": "margin-top: 20px;"
+    }))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["password"].label = ""
+        self.fields["confirm_password"].label = ""
 
     def clean(self):
         password = self.cleaned_data["password"]
@@ -162,10 +205,17 @@ class UpdateUserForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = [
-            "first_name",
-            "last_name",
             "password",
             "confirm_password",
-            "email",
-            "photo",
         ]
+
+
+class UpdatePhotoForm(forms.ModelForm):
+    """
+    Форма добавление фото к профилю
+    """
+    # TODO разобраться и доделать добавление фото к профилю
+    # photo = forms.ImageField(widget=forms.FileInput())
+    class Meta:
+        model = Account
+        fields = ["photo"]

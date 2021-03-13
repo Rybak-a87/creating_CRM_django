@@ -6,32 +6,37 @@
     {% if request.user.is_authenticated and request.user.manager_status %}
         {% include "include/search.html" %}
         <br>
-
+        <h4 class="text-center">Взаимодействия</h4>
         {% include "include/filter_interactions.html" %}
 
         {% for interaction in interactions %}
-        <div class="row text-center pt-3">
-            <div class="col-lg-6 m-auto">
-                <p>
-                    {% if request.user.username == interaction.manager.username %}
-                        <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">
+            <div class="row text-center pt-3">
+                <div class="col-lg-6 m-auto">
+                    <p>
+                        {% if request.user.username == interaction.manager.username %}
+                            <a href="{% url 'mainapp:interaction_detail' pk=interaction.id %}">
+                                Проект: {{ interaction.project }} |
+                                Компания: {{ interaction.company }} |
+                                Канал общения: {{ interaction.communication_channel }} |
+                                Менеджер: {{ interaction.manager }} |
+                                Описание: {{ interaction.about }}
+                            </a>
+                        {% else %}
                             Проект: {{ interaction.project }} |
                             Компания: {{ interaction.company }} |
                             Канал общения: {{ interaction.communication_channel }} |
                             Менеджер: {{ interaction.manager }} |
                             Описание: {{ interaction.about }}
-                        </a>
-                    {% else %}
-                        Проект: {{ interaction.project }} |
-                        Компания: {{ interaction.company }} |
-                        Канал общения: {{ interaction.communication_channel }} |
-                        Менеджер: {{ interaction.manager }} |
-                        Описание: {{ interaction.about }}
-                    {% endif %}
-                </p>
-                <hr>
+                        {% endif %}
+                    </p>
+                     <p>
+                        {% include "include/like_dislike_interaction.html" %}
+                     </p>
+                    <hr>
+                </div>
             </div>
-        </div>
         {% endfor %}
+    {% else %}
+        {% include "include/no_access.html" %}
     {% endif %}
 {% endblock content %}

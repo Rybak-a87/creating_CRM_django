@@ -4,8 +4,8 @@
 
 {% block content %}
     {% if request.user.is_authenticated and request.user.manager_status %}
-        <a href="{% url 'mainapp:create_project' %}"> <button class="btn btn-primary">Добавить проект</button> </a>
-
+        <a href="{% url 'mainapp:create_project' %}" class="btn btn-primary">Добавить проект</a>
+        <h4 class="text-center">Проекты</h4>
         {% include "include/filter_projects.html" %}
 
         {% for project in projects %}
@@ -29,5 +29,7 @@
         {% endfor %}
 
 {#    {% include "include/pagination.html" %}#}
+    {% else %}
+        {% include "include/no_access.html" %}
     {% endif %}
 {% endblock content %}

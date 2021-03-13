@@ -1,13 +1,13 @@
 {% extends "base/base.html" %}
 
-{% block title %}Редактировать данные{% endblock title %}
+{% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-                {{ kwagrs }}
     {% if request.user.id == check_user %}
         <div class="row text-center pt-3">
             <div class="col-lg-6 m-auto">
                 <h3 class="h3">Пользователь {{ request.user.username }}</h3>
+                <h5 class="h5">{{ title }}</h5>
                 <form method="post">
                     {% csrf_token %}
                     {{ form }}
@@ -15,6 +15,8 @@
                 </form>
             </div>
         </div>
+    {% else %}
+        {% include "include/no_access.html" %}
     {% endif %}
 
 {% endblock content %}

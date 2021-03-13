@@ -1,6 +1,5 @@
 .idea/
 django_env/
-temp/
 staticfiles/
 db.sqlite3
 *.pyc

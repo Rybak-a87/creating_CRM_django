@@ -19,10 +19,9 @@
                 <p>Менеджер: {{ interaction.manager }}</p>
                 <p>{{ interaction.date_create }}</p>
                 <p><i>Описание: <strong>{{ interaction.about }}</strong></i></p>
-                <p>
-                    {% include "include/like_dislike_interaction.html" %}
-                </p>
             </div>
         </div>
+    {% else %}
+        {% include "include/no_access.html" %}
     {% endif %}
 {% endblock content %}

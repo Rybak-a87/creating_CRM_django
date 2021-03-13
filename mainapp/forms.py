@@ -5,7 +5,9 @@ from .models import CompanyInformation, ProjectForCompany, Interaction
 
 
 class CreateCompanyForm(forms.ModelForm):
-
+    """
+    Форма для добавления и редактирования компании (клиента)
+    """
     class Meta:
         model = CompanyInformation
         fields = "__all__"
@@ -36,6 +38,9 @@ class CreateCompanyForm(forms.ModelForm):
 
 
 class CreateProjectForm(forms.ModelForm):
+    """
+    Форма для добавления и редактирования проекта
+    """
     class Meta:
         model = ProjectForCompany
         fields = "__all__"
@@ -60,15 +65,14 @@ class CreateProjectForm(forms.ModelForm):
 
 
 class CreateInteractionForm(forms.ModelForm):
+    """
+    Форма для добавления и редактирования зависимости
+    """
     class Meta:
         model = Interaction
-        fields = ("manager", "communication_channel", "about")
+        fields = ("communication_channel", "about")
 
         widgets = {
-            "manager": forms.Select(attrs={
-                "class": "form-control",
-                "placeholder": "Название проекта"
-            }),
             "about": forms.Textarea(attrs={
                 "class": "form-control",
                 "placeholder": "Описание"

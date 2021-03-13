@@ -1,18 +1,21 @@
 {% extends "base/base.html" %}
 
-{% block title %}Авторизация{% endblock title %}
+{% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-
-    <div class="row text-center pt-3">
-        <div class="col-lg-6 m-auto">
-            <h2 class="text-center">Войти</h2>
-            <form action="" method="post">
-                {% csrf_token %}
-                <p>{{ form }}</p>
-                <p><input type="submit" class="btn btn-success" value="Войти"></p>
-            </form>
+    {% if not request.user.is_authenticated %}
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h2 class="text-center">{{ title }}</h2>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <p>{{ form }}</p>
+                    <p><input type="submit" class="btn btn-success" value="Готово"></p>
+                </form>
+            </div>
         </div>
-    </div>
+    {% else %}
+        {% include "include/no_access.html" %}
+    {% endif %}
 
 {% endblock content %}

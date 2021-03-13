@@ -4,9 +4,9 @@
 
 {% block content %}
     {% if request.user.is_authenticated and request.user.manager_status %}
-        <a href="{% url 'mainapp:create_company' %}"> <button class="btn btn-primary">Добавить клиента</button> </a>
+        <a href="{% url 'mainapp:create_company' %}" class="btn btn-primary">Добавить клиента</a>
     {% endif %}
-
+    <h4 class="text-center">Клиенты</h4>
     {% if companies|length > 1 %}
         {% include "include/ordering_main_page.html" %}
     {% endif %}

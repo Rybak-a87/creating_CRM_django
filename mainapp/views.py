@@ -4,12 +4,16 @@ from django.http import HttpResponseRedirect
 
 from .models import CompanyInformation, ProjectForCompany, Interaction
 from .forms import CreateCompanyForm, CreateProjectForm, CreateInteractionForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
+# TODO доделать корректную сортировку компаний
 class MainListView(ListView):
     """
     Главная страница
-    вывод всех компаний
+    вывод всех компаний с пагинацией и сортировкой
     """
     model = CompanyInformation
     template_name = "mainapp/main_page.html"
@@ -19,6 +23,11 @@ class MainListView(ListView):
     def get_ordering(self):
         ordering = self.request.GET.get("order_by")
         return ordering
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["order_by"] = self.request.GET.get("order_by")
+        return context
 
 
 class DetailCompanyView(View):
@@ -77,6 +86,7 @@ class CompanyDeleteView(DeleteView):
     success_url = "/"
 
 
+# TODO доделать корректную фильтрацию проектов
 class ProjectsListView(ListView):
     """
     Страница вывода проектов
@@ -99,6 +109,7 @@ class ProjectsListView(ListView):
         return context
 
 
+# TODO доделать - при добавлении нового проекта с этой страницы автоматически заполнять поле <компания>
 class DetailProjectView(View):
     """
     Вывод детальной информации о проекте
@@ -155,6 +166,7 @@ class ProjectDeleteView(DeleteView):
     success_url = "/projects"
 
 
+# TODO доделать корректную работу фильтра и поиск по ключевым словам
 class InteractionListView(ListView):
     """
     Вывод взаимодействий с последующей фильтрацией
@@ -165,6 +177,12 @@ class InteractionListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        companies_list = tuple(set([i.company.name_company for i in self.model.objects.all()]))
+        projects_list = tuple(set([i.project.name_project for i in self.model.objects.all()]))
+        context["companies_list"] = companies_list
+        context["projects_list"] = projects_list
+
         company = self.request.GET.get("company")
         project = self.request.GET.get("project")
         if company:
@@ -210,7 +228,7 @@ class CreateInteractionView(View):
             new_interaction.project = ProjectForCompany.objects.get(name_project=project.name_project)
             new_interaction.company = CompanyInformation.objects.get(name_company=project.company)
             new_interaction.communication_channel = form.cleaned_data["communication_channel"]
-            new_interaction.manager = form.cleaned_data["manager"]
+            new_interaction.manager = User.objects.get(username=self.request.user.username)
             new_interaction.about = form.cleaned_data["about"]
             new_interaction.save()
             return HttpResponseRedirect(f"/project/{id}/")
@@ -241,9 +259,11 @@ class InteractionDeleteView(DeleteView):
 
 
 class ManagerView(View):
+    """
+    Кабинет менеджера (страничка пользователя)
+    """
     def get(self, request, *args, **kwargs):
         username = request.user.username
-        print(username)
         interactions = Interaction.objects.filter(manager__username=username)
         context = {
             "interactions": interactions

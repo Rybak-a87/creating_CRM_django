@@ -3,7 +3,7 @@
 {% block title %}{{ request.user.username }}{% endblock title %}
 
 {% block content %}
-    {% if request.user.is_authenticated and request.user.manager_status %}
+    {% if request.user.is_authenticated %}
         <div class="row text-center pt-3">
             <div class="col-lg-6 m-auto">
                 <h2 class="text-center">
@@ -12,7 +12,8 @@
                     {% else %}
                         Пользователь
                     {% endif %}
-                    <strong><span style="color: red">{{ request.user.username }}</span></strong></h2>
+                    <strong><span style="color: red">{{ request.user.username }}</span></strong>
+                </h2>
                 {% if request.user.photo %}
                     <img src="{{ request.user.photo.url }}" height="200" >
                 {% else %}
@@ -21,9 +22,19 @@
                 <p class="text-center" style="margin-top: 15px;">Имя: {{ request.user.first_name }}</p>
                 <p class="text-center" style="margin-top: 15px;">Фамилия: {{ request.user.last_name }}</p>
                 <p class="text-center" style="margin-top: 15px;">Электронная почта: {{ request.user.email }}</p>
-                <p><a href="{% url 'account:update_user' pk=request.user.id %}" class="btn btn-primary">Редактировать данные</a></p>
+                <p>
+                    <a href="{% url 'account:update_user' pk=request.user.id %}" class="btn btn-primary">Редактировать данные</a>
+                    <a href="{% url 'account:update_pass' pk=request.user.id %}" class="btn btn-primary">Изменить пароль</a>
+                    <a href="{% url 'account:update_photo' pk=request.user.id %}" class="btn btn-primary">Добавить фото</a>
+                </p>
                 <form method="get"><input type="hidden" name="check" value="{{ request.user.id }}"></form>
                 {% if request.user.manager_status %}
+                    <hr>
+                    <div class="col">
+                        <a href="{% url 'mainapp:create_company' %}" class="btn btn-success">Добавить клиента</a>
+                        <a href="{% url 'mainapp:create_project' %}" class="btn btn-success">Добавить проект</a>
+                        <a href="#" class="btn btn-success">Добавить взаимодействие</a>
+                    </div>
                     <hr>
                     <h4 class="h4">Мои взаимодействия:</h4>
                         {% for interaction in interactions %}
@@ -40,5 +51,7 @@
                 {% endif %}
             </div>
         </div>
+    {% else %}
+        {% include "include/no_access.html" %}
     {% endif %}
 {% endblock content %}

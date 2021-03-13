@@ -6,6 +6,9 @@ from .models import CompanyInformation, ProjectForCompany, Interaction, RatingIn
 
 
 class CompanyInformationAdminForm(forms.ModelForm):
+    """
+    Форма для отображения CKEditor в админке
+    """
     about_company = forms.CharField(widget=CKEditorUploadingWidget())
 
     class Meta:
