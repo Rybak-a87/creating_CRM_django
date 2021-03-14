@@ -315,6 +315,9 @@ class ManagerView(View):
 
 
 class AddLikeView(View):
+    """
+    Добавление лайка к взаимодействию
+    """
     def post(self, request, *args, **kwargs):
         interaction_id = int(request.POST.get("interaction_id"))
         user_id = int(request.POST.get("user_id"))
@@ -339,6 +342,9 @@ class AddLikeView(View):
 
 
 class RemoveLikeView(View):
+    """
+    Удаление лайк с БД
+    """
     def post(self, request, *args, **kwargs):
         interaction_likes_id = int(request.POST.get("interaction_likes_id"))
         url_from = request.POST.get("url_from")

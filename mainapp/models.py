@@ -78,8 +78,6 @@ class Interaction(models.Model):
     manager = models.ForeignKey(User, verbose_name="Менеджер", on_delete=models.CASCADE)
     date_create = models.DateTimeField(verbose_name="Дата создания взаимодействия", auto_now_add=True)
     about = models.TextField(verbose_name="Описание")
-    like = models.PositiveIntegerField(verbose_name="Лайк", default=0)
-    dislike = models.PositiveIntegerField(verbose_name="Дизлайк", default=0)
 
     def __str__(self):
         return f"{self.project} | {self.manager}"
@@ -100,7 +98,7 @@ class RatingInteraction(models.Model):
     interaction = models.ForeignKey(Interaction, verbose_name="Взаимодействие", on_delete=models.CASCADE)
     manager = models.ForeignKey(User, verbose_name="Менеджер", on_delete=models.CASCADE)
     like = models.BooleanField(verbose_name="Лайк", default=False)
-    dislike = models.BooleanField(verbose_name="Дизлайк", default=False)
+    # dislike = models.BooleanField(verbose_name="Дизлайк", default=False)
     created_date = models.DateTimeField(verbose_name="Дата установки лайка", auto_now=True)
 
     def __str__(self):
