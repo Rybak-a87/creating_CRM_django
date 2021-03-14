@@ -3,3 +3,6 @@ https://coderoad.ru/33350362/Django-ListView-форма-для-фильтрац�
 https://overcoder.net/q/213536/есть-ли-в-django-list-view-модель-для-сортировки
 
 https://progi.pro/django-listview-forma-filtracii-i-sortirovki-1452332
+
+лайки
+https://apirobot.me/posts/how-to-implement-liking-in-django

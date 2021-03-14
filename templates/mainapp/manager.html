@@ -33,7 +33,7 @@
                     <div class="col">
                         <a href="{% url 'mainapp:create_company' %}" class="btn btn-success">Добавить клиента</a>
                         <a href="{% url 'mainapp:create_project' %}" class="btn btn-success">Добавить проект</a>
-                        <a href="#" class="btn btn-success">Добавить взаимодействие</a>
+                        <a href="{% url 'mainapp:create_interaction' %}" class="btn btn-success">Добавить взаимодействие</a>
                     </div>
                     <hr>
                     <h4 class="h4">Мои взаимодействия:</h4>
@@ -45,6 +45,7 @@
                                     Канал общения: {{ interaction.communication_channel }} |
                                     Описание: {{ interaction.about }}
                                 </a>
+                                {% include "include/like_dislike_interaction.html" with interaction_id=interaction.id %}
                             </p>
                             <hr>
                         {% endfor %}

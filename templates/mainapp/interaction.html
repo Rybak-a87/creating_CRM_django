@@ -3,13 +3,27 @@
 {% block title %}Все взаимодействия{% endblock title %}
 
 {% block content %}
-    {% if request.user.is_authenticated and request.user.manager_status %}
-        {% include "include/search.html" %}
-        <br>
-        <h4 class="text-center">Взаимодействия</h4>
-        {% include "include/filter_interactions.html" %}
 
-        {% for interaction in interactions %}
+
+
+    {% if request.user.is_authenticated and request.user.manager_status %}
+        <h4 class="text-center">Взаимодействия</h4>
+        <br>
+
+        {#    django-filter#}
+            {% include "include/django_filter_form.html" %}
+        {#    django-filter#}
+
+
+{#        Кастомный фильтр и поиск#}
+{#        {% include "include/filter_interactions.html" %}#}
+{#        <br>#}
+{#        {% include "include/search.html" %}#}
+{#        Кастомный фильтр и поиск#}
+{#        {% for interaction in interactions %}#}
+
+        <br>
+        {% for interaction in filter.qs %}
             <div class="row text-center pt-3">
                 <div class="col-lg-6 m-auto">
                     <p>
@@ -30,7 +44,7 @@
                         {% endif %}
                     </p>
                      <p>
-                        {% include "include/like_dislike_interaction.html" %}
+                        {% include "include/like_dislike_interaction.html" with interaction_id=interaction.id %}
                      </p>
                     <hr>
                 </div>

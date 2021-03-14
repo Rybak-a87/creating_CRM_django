@@ -19,6 +19,8 @@
                 <p>Менеджер: {{ interaction.manager }}</p>
                 <p>{{ interaction.date_create }}</p>
                 <p><i>Описание: <strong>{{ interaction.about }}</strong></i></p>
+                <br>
+                {% include "include/like_dislike_interaction.html" with interaction_id=interaction.id %}
             </div>
         </div>
     {% else %}

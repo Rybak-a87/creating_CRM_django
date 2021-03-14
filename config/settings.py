@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     # ckeditor
     "ckeditor",
     "ckeditor_uploader",
+    # Django filter
+    "django_filters",
 ]
 
 MIDDLEWARE = [

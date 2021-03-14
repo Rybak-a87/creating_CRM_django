@@ -9,9 +9,10 @@
                 <h3 class="h3">Добавление взаимодействие</h3>
                 <br>
                 <div class="features">
+                    <h3 class="h3">Проект: {{ project.name_project }}</h3>
+                    <h4 class="h4">Компания: {{ project.company }}</h4>
                     <form action="" method="post">
                         {% csrf_token %}
-                        <p>Проект: {{ form.project }}</p>
                         <p>Канал общения: {{ form.communication_channel }}</p>
                         <p>{{ form.about }}</p>
                         <input type="submit" class="btn btn-success" value="Применить">

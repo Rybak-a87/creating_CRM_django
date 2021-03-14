@@ -22,7 +22,7 @@
             </div>
             <h4 class="h4" style="color: green">Выполненные проекты компании</h4>
             {% if request.user.manager_status %}
-                <a href="{% url 'mainapp:create_project' %}"> <button type="submit" class="btn btn-primary">Добавить проект</button> </a>
+                <a href="{% url 'mainapp:create_project' %}?company_id={{ company.id }}"> <button type="submit" class="btn btn-primary">Добавить проект</button> </a>
             {% endif %}
             {% for project in projects %}
                 {% if project.finished %}

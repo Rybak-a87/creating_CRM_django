@@ -37,19 +37,22 @@ class CreateCompanyForm(forms.ModelForm):
         }
 
 
-class CreateProjectForm(forms.ModelForm):
+class CreateProjectWithCompanyForm(forms.ModelForm):
     """
-    Форма для добавления и редактирования проекта
+    Форма для добавления проекта со страницы с описанием компании
     """
     class Meta:
         model = ProjectForCompany
-        fields = "__all__"
+        fields = (
+            "name_project",
+            "about_project",
+            "start_date",
+            "finished",
+            "finish_date",
+            "price"
+        )
 
         widgets = {
-            "company": forms.Select(attrs={
-                "class": "form-control",
-                "placeholder": "Компания"
-            }),
             "name_project": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Название проекта"
@@ -64,13 +67,26 @@ class CreateProjectForm(forms.ModelForm):
         }
 
 
-class CreateInteractionForm(forms.ModelForm):
+class CreateProjectForm(CreateProjectWithCompanyForm):
     """
-    Форма для добавления и редактирования зависимости
+    Форма для добавления проекта
+    """
+    CreateProjectWithCompanyForm.Meta.fields = "__all__"
+    CreateProjectWithCompanyForm.Meta.widgets |= {
+        "company": forms.Select(attrs={
+            "class": "form-control",
+            "placeholder": "Компания"
+        })
+    }
+
+
+class CreateInteractionWithProjectForm(forms.ModelForm):
+    """
+    Форма для добавления и редактирования зависимости со страницы описания проекта
     """
     class Meta:
         model = Interaction
-        fields = ("communication_channel", "about")
+        fields = ["communication_channel", "about"]
 
         widgets = {
             "about": forms.Textarea(attrs={
@@ -83,3 +99,18 @@ class CreateInteractionForm(forms.ModelForm):
             })
 
         }
+
+
+class CreateInteractionForm(CreateInteractionWithProjectForm):
+    """
+    Форма для добавления зависимости
+    """
+    CreateInteractionWithProjectForm.Meta.fields += [
+        "project",
+    ]
+    CreateInteractionWithProjectForm.Meta.widgets |= {
+        "project": forms.Select(attrs={
+            "class": "form-control",
+            "placeholder": "Канал общения"
+        })
+    }

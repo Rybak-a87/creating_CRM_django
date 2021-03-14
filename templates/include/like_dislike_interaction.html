@@ -1,4 +1,30 @@
-<form action="" method="get">
-    <input type="submit" class="btn btn-success" value="Like">
-    <input type="submit" class="btn btn-success" value="Dislike">
+{% load like_dislike %}
+
+{% is_liked interaction_id as is_liked_bool %}
+{% count_likes interaction_id as likes_counter %}
+
+{% if is_liked_bool %}
+    {% interaction_likes_id interaction_id as interaction_likes_id %}
+{% endif %}
+
+<form action="{% if not is_liked_bool %}{% url 'mainapp:like_add' %}{% else %}{% url 'mainapp:like_remove' %}{% endif %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="interaction_id" value="{{ interaction_id }}">
+    <input type="hidden" name="user_id" value="{{ request.user.id }}">
+    <input type="hidden" name="url_from" value="{{ request.path }}">
+
+    {% if is_liked_bool %}
+        <input type="hidden" name="interaction_likes_id" value="{{ interaction_likes_id }}">
+    {% endif %}
+
+    {% if is_liked_bool %}
+        <button type="submit" class="btn btn-danger">
+            <span style="color: black"><i>Like</i> <strong>{{ likes_counter }}</strong></span>
+        </button>
+    {% else %}
+        <button type="submit" class="btn btn-secondary">
+            <i>Like</i> <strong>{{ likes_counter }}</strong>
+        </button>
+    {% endif %}
+
 </form>

@@ -2,14 +2,21 @@ from django.shortcuts import render
 from django.views.generic import View, UpdateView, DeleteView, ListView
 from django.http import HttpResponseRedirect
 
-from .models import CompanyInformation, ProjectForCompany, Interaction
-from .forms import CreateCompanyForm, CreateProjectForm, CreateInteractionForm
+from .filters import InteractionFilter
+
+from .models import CompanyInformation, ProjectForCompany, Interaction, RatingInteraction
+from .forms import (
+    CreateCompanyForm,
+    CreateProjectForm,
+    CreateInteractionWithProjectForm,
+    CreateProjectWithCompanyForm,
+    CreateInteractionForm
+)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
-# TODO доделать корректную сортировку компаний
 class MainListView(ListView):
     """
     Главная страница
@@ -86,7 +93,6 @@ class CompanyDeleteView(DeleteView):
     success_url = "/"
 
 
-# TODO доделать корректную фильтрацию проектов
 class ProjectsListView(ListView):
     """
     Страница вывода проектов
@@ -94,10 +100,9 @@ class ProjectsListView(ListView):
     model = ProjectForCompany
     template_name = "mainapp/projects_in_work.html"
     context_object_name = "projects"
-    # paginate_by = 3
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        projects_status = self.request.GET.get("projects_status")
+        projects_status = self.request.GET.get("order_by")
         context = super().get_context_data(**kwargs)
         if projects_status:
             if projects_status == "in_work":
@@ -106,10 +111,10 @@ class ProjectsListView(ListView):
                 projects_status = True
 
             context["projects"] = self.model.objects.filter(finished=projects_status)
+
         return context
 
 
-# TODO доделать - при добавлении нового проекта с этой страницы автоматически заполнять поле <компания>
 class DetailProjectView(View):
     """
     Вывод детальной информации о проекте
@@ -128,19 +133,36 @@ class DetailProjectView(View):
 class CreateProjectView(View):
     """
     Добавить новый проект в базу
+    обработкой гет запроса
     """
     def get(self, request, *args, **kwargs):
-        form = CreateProjectForm(request.POST or None)
+        company_id = request.GET.get("company_id")
+        if company_id:
+            form = CreateProjectWithCompanyForm(request.POST or None)
+        else:
+            form = CreateProjectForm(request.POST or None)
+
         context = {
             "form": form
         }
         return render(request, "mainapp/project_create.html", context)
 
     def post(self, request, *args, **kwargs):
-        form = CreateProjectForm(request.POST or None)
+        company_id = request.GET.get("company_id")
+        if company_id:
+            form = CreateProjectWithCompanyForm(request.POST or None)
+        else:
+            form = CreateProjectForm(request.POST or None)
+
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/projects")
+            if company_id:
+                new_project = form.save(commit=False)
+                new_project.company = CompanyInformation.objects.get(id=company_id)
+                new_project.save()
+                return HttpResponseRedirect("/projects")
+            else:
+                form.save()
+                return HttpResponseRedirect("/projects")
         else:
             context = {
                 "form": form
@@ -154,7 +176,7 @@ class ProjectUpdateView(UpdateView):
     """
     model = ProjectForCompany
     template_name = "mainapp/project_create.html"
-    form_class = CreateProjectForm
+    form_class = CreateProjectWithCompanyForm
 
 
 class ProjectDeleteView(DeleteView):
@@ -166,7 +188,6 @@ class ProjectDeleteView(DeleteView):
     success_url = "/projects"
 
 
-# TODO доделать корректную работу фильтра и поиск по ключевым словам
 class InteractionListView(ListView):
     """
     Вывод взаимодействий с последующей фильтрацией
@@ -177,18 +198,19 @@ class InteractionListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["filter"] = InteractionFilter(self.request.GET, queryset=self.get_queryset())
 
-        companies_list = tuple(set([i.company.name_company for i in self.model.objects.all()]))
-        projects_list = tuple(set([i.project.name_project for i in self.model.objects.all()]))
-        context["companies_list"] = companies_list
-        context["projects_list"] = projects_list
+        # ! Кастомный фильтр
+        # TODO доделать корректную работу фильтра и поиск по ключевым словам
+        # context["companies_list"] = tuple(set([i.company.name_company for i in self.model.objects.all()]))
+        # context["projects_list"] = tuple(set([i.project.name_project for i in self.model.objects.all()]))
+        # company = self.request.GET.get("company")
+        # project = self.request.GET.get("project")
+        # if company:
+        #     context["interactions"] = self.model.objects.filter(company__name_company=company)
+        # elif project:
+        #     context["interactions"] = self.model.objects.filter(project__name_project=project)
 
-        company = self.request.GET.get("company")
-        project = self.request.GET.get("project")
-        if company:
-            context["interactions"] = self.model.objects.filter(company__name_company=company)
-        elif project:
-            context["interactions"] = self.model.objects.filter(project__name_project=project)
         return context
 
 
@@ -208,36 +230,57 @@ class DetailInteractionView(View):
 class CreateInteractionView(View):
     """
     Добавление взаимодействия по проекту
+    с обработкой гет запроса
     """
     def get(self, request, *args, **kwargs):
-        project = ProjectForCompany.objects.get(id=kwargs.get("pk"))
-        form = CreateInteractionForm(request.POST or None)
-        context = {
-            "form": form,
-            "project": project
-        }
-        return render(request, "mainapp/interaction_create.html", context)
-
-    def post(self, request, *args, **kwargs):
-        id = kwargs.get("pk")
-        project = ProjectForCompany.objects.get(id=id)
-        print(project.name_project, project.company)
-        form = CreateInteractionForm(request.POST or None)
-        if form.is_valid():
-            new_interaction = form.save(commit=False)
-            new_interaction.project = ProjectForCompany.objects.get(name_project=project.name_project)
-            new_interaction.company = CompanyInformation.objects.get(name_company=project.company)
-            new_interaction.communication_channel = form.cleaned_data["communication_channel"]
-            new_interaction.manager = User.objects.get(username=self.request.user.username)
-            new_interaction.about = form.cleaned_data["about"]
-            new_interaction.save()
-            return HttpResponseRedirect(f"/project/{id}/")
-        else:
+        project_id = request.GET.get("project_id")
+        if project_id:
+            project = ProjectForCompany.objects.get(id=project_id)
+            form = CreateInteractionWithProjectForm(request.POST or None)
             context = {
                 "form": form,
                 "project": project
             }
+            return render(request, "mainapp/interaction_create_with_project.html", context)
+        else:
+            form = CreateInteractionForm(request.POST or None)
+            context = {
+                "form": form,
+            }
             return render(request, "mainapp/interaction_create.html", context)
+
+    def post(self, request, *args, **kwargs):
+        project_id = request.GET.get("project_id")
+        if project_id:
+            project = ProjectForCompany.objects.get(id=project_id)
+            form = CreateInteractionWithProjectForm(request.POST or None)
+            if form.is_valid():
+                new_interaction = form.save(commit=False)
+                new_interaction.project = ProjectForCompany.objects.get(name_project=project.name_project)
+                new_interaction.company = CompanyInformation.objects.get(name_company=project.company)
+                new_interaction.manager = User.objects.get(username=self.request.user.username)
+                new_interaction.save()
+                return HttpResponseRedirect(f"/project/{project_id}/")
+            else:
+                context = {
+                    "form": form,
+                    "project": project
+                }
+                return render(request, "mainapp/interaction_create_with_project.html", context)
+        else:
+            form = CreateInteractionForm(request.POST or None)
+            if form.is_valid():
+                new_interaction = form.save(commit=False)
+                project = ProjectForCompany.objects.get(name_project=form.cleaned_data["project"])
+                new_interaction.company = CompanyInformation.objects.get(name_company=project.company.name_company)
+                new_interaction.manager = User.objects.get(username=self.request.user.username)
+                new_interaction.save()
+                return HttpResponseRedirect(f"/interactions/")
+            else:
+                context = {
+                    "form": form,
+                }
+                return render(request, "mainapp/interaction_create.html", context)
 
 
 class InteractionUpdateView(UpdateView):
@@ -245,8 +288,8 @@ class InteractionUpdateView(UpdateView):
     Изменение данных проекта
     """
     model = Interaction
-    template_name = "mainapp/interaction_create.html"
-    form_class = CreateInteractionForm
+    template_name = "mainapp/interaction_create_with_project.html"
+    form_class = CreateInteractionWithProjectForm
 
 
 class InteractionDeleteView(DeleteView):
@@ -269,3 +312,37 @@ class ManagerView(View):
             "interactions": interactions
         }
         return render(request, "mainapp/manager.html", context)
+
+
+class AddLikeView(View):
+    def post(self, request, *args, **kwargs):
+        interaction_id = int(request.POST.get("interaction_id"))
+        user_id = int(request.POST.get("user_id"))
+        url_from = request.POST.get("url_from")
+
+        interaction = Interaction.objects.get(id=interaction_id)
+        user = User.objects.get(id=user_id)
+
+        try:
+            interaction_like_inst = RatingInteraction.objects.get(
+                interaction=interaction,
+                manager=user
+            )
+        except Exception as ex:
+            interaction_like = RatingInteraction(
+                interaction=interaction,
+                manager=user,
+                like=True
+            )
+            interaction_like.save()
+        return HttpResponseRedirect(url_from)
+
+
+class RemoveLikeView(View):
+    def post(self, request, *args, **kwargs):
+        interaction_likes_id = int(request.POST.get("interaction_likes_id"))
+        url_from = request.POST.get("url_from")
+
+        interaction_like = RatingInteraction.objects.get(id=interaction_likes_id)
+        interaction_like.delete()
+        return HttpResponseRedirect(url_from)

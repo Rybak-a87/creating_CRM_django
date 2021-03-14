@@ -101,6 +101,7 @@ class RatingInteraction(models.Model):
     manager = models.ForeignKey(User, verbose_name="Менеджер", on_delete=models.CASCADE)
     like = models.BooleanField(verbose_name="Лайк", default=False)
     dislike = models.BooleanField(verbose_name="Дизлайк", default=False)
+    created_date = models.DateTimeField(verbose_name="Дата установки лайка", auto_now=True)
 
     def __str__(self):
         return f"{self.interaction.date_create} | {self.interaction.manager} | {'+' if self.like else '-'}"

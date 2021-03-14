@@ -24,7 +24,7 @@
                 <hr>
             </div>
             <h4 class="h4" style="color: green">Взаимодействие по проекту</h4>
-            <a href="{% url 'mainapp:create_interaction' pk=project.id %}"> <button class="btn btn-primary">Добавить взаимодействие</button> </a>
+            <a href="{% url 'mainapp:create_interaction' %}?project_id={{ project.id }}"> <button class="btn btn-primary">Добавить взаимодействие</button> </a>
             {% for interaction in interactions %}
                 <div class="row text-center pt-3">
                     <div class="col-lg-6 m-auto">

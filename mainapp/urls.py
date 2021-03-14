@@ -21,9 +21,12 @@ urlpatterns = [
     # interaction
     path("interactions/", views.InteractionListView.as_view(), name="interaction_page"),
     path("interaction/<int:pk>/", views.DetailInteractionView.as_view(), name="interaction_detail"),
-    path("interaction/<int:pk>/create/", views.CreateInteractionView.as_view(), name="create_interaction"),
+    path("interaction/create/", views.CreateInteractionView.as_view(), name="create_interaction"),
     path("interaction/<int:pk>/update/", views.InteractionUpdateView.as_view(), name="update_interaction"),
     path("interaction/<int:pk>/delete", views.InteractionDeleteView.as_view(), name="delete_interaction"),
     # manager
     path("user/", views.ManagerView.as_view(), name="manager"),
+    # likes
+    path("add_like/", views.AddLikeView.as_view(), name="like_add"),
+    path("remove_like/", views.RemoveLikeView.as_view(), name="like_remove"),
 ]
