@@ -12,7 +12,9 @@
             <div class="col-lg-6 m-auto">
                 <h2 class="h2">{{ company.name_company }}</h2>
                 <p><strong>Контактное лицо:</strong><br>{{ company.contact_person }}</p>
-                <p><strong>Краткое описание:</strong><br>{{ company.about_company|striptags }}</p>
+                {% autoescape off %}
+                    <p><strong>Краткое описание:</strong><br>{{ company.about_company }}</p>
+                {% endautoescape %}
                 <p><strong>Дата создания:</strong><br>{{ company.create_date }}</p>
                 <p><strong>Дата последнего изменения:</strong><br>{{ company.date_of_change }}</p>
                 <p><strong>Адрес:</strong><br>{{ company.address }}</p>

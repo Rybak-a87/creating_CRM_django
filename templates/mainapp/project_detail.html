@@ -10,7 +10,9 @@
             <div class="col-lg-6 m-auto">
                 <h2 class="h2">{{ project.name_project }}</h2>
                 <p><strong>Компания:</strong><br>{{ project.company }}</p>
-                <p><strong>Описание:</strong><br>{{ project.about_project|striptags }}</p>
+                {% autoescape off %}
+                    <p><strong>Описание:</strong><br>{{ project.about_project }}</p>
+                {% endautoescape %}
                 <p><strong>Срок начала:</strong><br>{{ project.start_date }}</p>
                 <p>
                     {% if project.finished %}
