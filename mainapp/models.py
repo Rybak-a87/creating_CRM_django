@@ -19,8 +19,13 @@ class CompanyInformation(models.Model):
     phone = models.CharField(verbose_name="Номер телефона", max_length=255)
     email = models.EmailField(verbose_name="E-mail")
 
+    # 1й способ
     def get_absolute_url(self):
         return f"/company/{self.id}"
+
+    # 2й способ
+    # def get_absolute_url(self):
+    #     return reverse("company", kwargs={"pk": self.id})
 
     def __str__(self):
         return self.name_company
@@ -42,6 +47,7 @@ class ProjectForCompany(models.Model):
     finish_date = models.DateField(verbose_name="Срок окончания", null=True, blank=True)
     price = models.FloatField(verbose_name="Стоимость")
 
+    # 1й способ
     def get_absolute_url(self):
         return f"/project/{self.id}"
 
