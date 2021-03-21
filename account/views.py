@@ -134,3 +134,34 @@ class PhotoUpdateView(UpdateView):
         context["check_user"] = self.kwargs.get("pk")
         context["title"] = "Выбрать фото"
         return context
+
+
+# TODO разобраться и доделать добавление фото к профилю через форму (class PhotoUpdateView)
+# class PhotoUpdateView(View):
+#     """
+#     Изменить пароль пользователя
+#     """
+#     def get(self, request, *args, **kwargs):
+#         form = UpdatePhotoForm(request.POST or None)
+#         check_user = kwargs.get("pk")
+#         context = {
+#             "form": form,
+#             "check_user": check_user,
+#             "title": "Выбрать фото"
+#         }
+#         return render(request, "account/update_user.html", context)
+#
+#     def post(self, request, *args, **kwargs):
+#         form = UpdatePhotoForm(request.POST, request.FILES)
+#         check_user = kwargs.get("pk")
+#         if form.is_valid():
+#             a = request.FILES["photo"]
+#             print(form.cl)
+#             print(a)
+#
+#         context = {
+#             "form": form,
+#             "check_user": check_user,
+#             "title": "Выбрать фото"
+#         }
+#         return render(request, "account/update_user.html", context)

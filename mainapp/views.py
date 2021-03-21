@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View, UpdateView, DeleteView, ListView
+from django.views.generic import View, UpdateView, DeleteView, ListView, DetailView
 from django.http import HttpResponseRedirect
 
 from .filters import InteractionFilter
@@ -52,6 +52,21 @@ class DetailCompanyView(View):
         return render(request, "mainapp/company_detail.html", context)
 
 
+# # TODO переписать класс DetailCompanyView с View на DetailView (переделать get_absolute_url и применить его везде)
+# class CompanyDetailView(DetailView):
+#     """
+#     Вывод детальной информации о компании с перечнем списка проектов компании
+#     """
+#     model = CompanyInformation
+#     pk_url_kwarg = "pk"
+#     template_name = "mainapp/company_detail.html"
+#     context_object_name = "company"
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return context
+
+
 class CreateCompanyView(View):
     """
     Добавить новую компанию в базу
@@ -100,19 +115,33 @@ class ProjectsListView(ListView):
     model = ProjectForCompany
     template_name = "mainapp/projects_in_work.html"
     context_object_name = "projects"
+    paginate_by = 3
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        projects_status = self.request.GET.get("order_by")
         context = super().get_context_data(**kwargs)
+        projects_status = self.request.GET.get("order_by")
+        if projects_status:
+            context["order_by"] = projects_status
+    #         if projects_status == "in_work":
+    #             projects_status = False
+    #         elif projects_status == "finished":
+    #             projects_status = True
+    #
+    #         context["projects"] = self.model.objects.filter(finished=projects_status)
+    #
+        return context
+
+    def get_queryset(self):
+        projects_status = self.request.GET.get("order_by")
         if projects_status:
             if projects_status == "in_work":
                 projects_status = False
             elif projects_status == "finished":
                 projects_status = True
 
-            context["projects"] = self.model.objects.filter(finished=projects_status)
+            return ProjectForCompany.objects.filter(finished=projects_status)
 
-        return context
+        return ProjectForCompany.objects.all()
 
 
 class DetailProjectView(View):
