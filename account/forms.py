@@ -1,5 +1,8 @@
 from django import forms
 
+# капча
+from captcha.fields import CaptchaField
+
 from .models import Account
 
 
@@ -7,6 +10,9 @@ class LoginForm(forms.ModelForm):
     """
     Форма для авторизации пользователя
     """
+    # капча
+    captcha = CaptchaField()
+
     username = forms.CharField(widget=forms.TextInput(attrs={
         "class": "form-control",
         "placeholder": "Логин",
@@ -15,13 +21,14 @@ class LoginForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         "class": "form-control",
         "placeholder": "Пароль",
-        "style": "margin-top: 20px;"
+        "style": "margin: 20px 0px;"
     }))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = ""
         self.fields["password"].label = ""
+        self.fields["captcha"].label = ""
 
     def clean(self):
         """

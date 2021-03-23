@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "django_filters",
     # Django debug toolbar
     "debug_toolbar",
+    # капча
+    "captcha",
 ]
 
 MIDDLEWARE = [

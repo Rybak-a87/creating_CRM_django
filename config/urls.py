@@ -9,7 +9,9 @@ urlpatterns = [
     path("", include("mainapp.urls")),
     path("account/", include("account.urls")),
     # ckeditor
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
+    # капча
+    path("captcha/", include("captcha.urls")),
 ]
 
 if settings.DEBUG:

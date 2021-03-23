@@ -10,6 +10,11 @@
                 <form action="" method="post">
                     {% csrf_token %}
                     <p>{{ form }}</p>
+{#                    <div class="row-form-errors">{{ form.non_field_errors }}</div>#}
+{#                    {% for f in form %}#}
+{#                        <label class="form-row" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}#}
+{#                        <div class="row-form-errors">{{ f.error }}</div>#}
+{#                    {% endfor %}#}
                     <p><input type="submit" class="btn btn-success" value="Готово"></p>
                 </form>
             </div>
