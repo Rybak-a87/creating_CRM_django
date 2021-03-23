@@ -10,3 +10,7 @@
 
 - переписать класс DetailCompanyView с View на DetailView (переделать get_absolute_url и применить его везде)
 
+Внедрить:
+- Debug Toolbar
+- Кэширование на уровне файловой системы
+- Captcha
