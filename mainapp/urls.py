@@ -11,7 +11,7 @@ app_name = "mainapp"
 
 urlpatterns = [
     # companies page (main)
-    path("",views.MainListView.as_view(), name="main_page"),
+    path("", views.MainListView.as_view(), name="main_page"),
     path("company/<int:pk>/", cache_page(time_cache)(views.DetailCompanyView.as_view()), name="detail_company"),
     path("company/create_new/", views.CreateCompanyView.as_view(), name="create_company"),
     path("company/<int:pk>/update/", views.CompanyUpdateView.as_view(), name="update_company"),

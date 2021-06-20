@@ -1,0 +1,10 @@
+Запуск
+docker-compose build --no-cache
+docker-compose up
+
+удаление всех образов
+docker rmi $(docker images -a -q)
+
+удаление контейнеров
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)

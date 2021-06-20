@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     "debug_toolbar",
     # капча
     "captcha",
+    # модуль для работы с postgres
+    "psycopg2",
 ]
 
 MIDDLEWARE = [
@@ -61,7 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Django debug toolbar
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -91,8 +93,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # sqlite
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        # sqlite
+
+        # postgres (правильно хранить логины и пароли в переменных окружении)
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "crm_db",
+        "USER": "admin",
+        "PASSWORD": "admin",
+        "HOST": "postgresdb",
+        "PORT": 5432
+        # postgres
     }
 }
 
@@ -145,9 +158,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # Django debug toolbar
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+# ]
 
 # кэширование
 CACHES = {
